@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>TalentMatch AI – Employee Skill Matching</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f5f4f0;
+      --surface: #ffffff;
+      --surface2: #f0efe9;
+      --border: #e2e0d8;
+      --text: #1a1916;
+      --muted: #7a7870;
+      --accent: #c8b560;
+      --accent-dark: #a8962e;
+      --green: #2d6a4f;
+      --green-light: #e8f5f0;
+      --red-light: #fdf2f2;
+      --red: #c0392b;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow: 0 4px 16px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
+      --shadow-lg: 0 16px 48px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.06);
+      --radius: 14px;
+      --radius-sm: 8px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .topbar-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 28px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand-icon {
+      width: 34px;
+      height: 34px;
+      background: var(--text);
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .brand-icon svg { width: 18px; height: 18px; }
+    .brand-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: -0.2px;
+    }
+    .brand-tag {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 400;
+    }
+    .status-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--muted);
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      border-radius: 999px;
+    }
+    .status-dot {
+      width: 7px; height: 7px;
+      background: #27ae60;
+      border-radius: 50%;
+      box-shadow: 0 0 0 3px rgba(39,174,96,0.18);
+    }
+
+    /* ── MAIN LAYOUT ── */
+    .page {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 28px 28px 48px;
+    }
+
+    .page-header {
+      margin-bottom: 24px;
+    }
+    .page-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 4px;
+    }
+    .page-sub {
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .main-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .card-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface);
+    }
+    .card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .card-body { padding: 20px; }
+
+    /* ── JD PANEL ── */
+    .sample-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .sample-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      margin-right: 4px;
+    }
+    .sample-btn {
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text);
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.15s ease;
+    }
+    .sample-btn:hover {
+      background: var(--text);
+      color: var(--bg);
+      border-color: var(--text);
+    }
+
+    .jd-textarea {
+      width: 100%;
+      min-height: 320px;
+      resize: vertical;
+      padding: 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13.5px;
+      line-height: 1.6;
+      outline: none;
+      transition: border 0.2s, box-shadow 0.2s;
+    }
+    .jd-textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(200,181,96,0.15);
+      background: var(--surface);
+    }
+    .jd-textarea::placeholder { color: var(--muted); }
+
+    .char-counter {
+      font-size: 11px;
+      color: var(--muted);
+      text-align: right;
+      margin-top: 6px;
+      margin-bottom: 14px;
+    }
+
+    .action-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 10px 18px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+    .btn:hover {
+      background: var(--border);
+      transform: translateY(-1px);
+    }
+    .btn-primary {
+      background: var(--text);
+      color: var(--bg);
+      border-color: var(--text);
+      font-weight: 600;
+    }
+    .btn-primary:hover {
+      background: #333;
+      border-color: #333;
+    }
+    .btn-excel {
+      background: #1e6b3c;
+      color: #fff;
+      border-color: #1e6b3c;
+      font-weight: 600;
+    }
+    .btn-excel:hover {
+      background: #155230;
+      border-color: #155230;
+    }
+    .btn-clear {
+      background: transparent;
+      color: var(--muted);
+      border-color: transparent;
+      font-size: 12px;
+      padding: 10px 10px;
+    }
+    .btn-clear:hover { color: var(--red); background: var(--red-light); }
+
+    /* ── RESULTS PANEL ── */
+    .results-placeholder {
+      text-align: center;
+      padding: 48px 20px;
+      color: var(--muted);
+    }
+    .results-placeholder .ph-icon {
+      font-size: 36px;
+      margin-bottom: 10px;
+      opacity: 0.4;
+    }
+    .results-placeholder p { font-size: 13px; line-height: 1.5; }
+
+    .results-stats {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .stat-chip {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      color: var(--muted);
+    }
+    .stat-chip span { color: var(--text); }
+
+    /* Employee Cards */
+    .emp-list { display: flex; flex-direction: column; gap: 10px; }
+    .emp-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      background: var(--surface2);
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 12px;
+      align-items: center;
+      transition: box-shadow 0.15s;
+    }
+    .emp-card:hover { box-shadow: var(--shadow); background: var(--surface); }
+
+    .emp-rank {
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      background: var(--text);
+      color: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700;
+      flex-shrink: 0;
+    }
+    .emp-rank.top3 { background: var(--accent); color: var(--text); }
+
+    .emp-info { min-width: 0; }
+    .emp-name {
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .emp-meta {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .emp-badges { display: flex; gap: 4px; margin-top: 5px; flex-wrap: wrap; }
+    .badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid;
+    }
+    .badge-green { background: var(--green-light); color: var(--green); border-color: #b0d9c6; }
+    .badge-yellow { background: #fef9e7; color: #8a6d00; border-color: #f5e57a; }
+    .badge-red { background: var(--red-light); color: var(--red); border-color: #f5c6c2; }
+
+    .emp-score { text-align: right; flex-shrink: 0; }
+    .score-value {
+      font-family: 'Syne', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+    .score-value.high { color: var(--green); }
+    .score-value.mid { color: #c47b00; }
+    .score-value.low { color: var(--red); }
+    .score-label { font-size: 10px; color: var(--muted); margin-top: 1px; }
+
+    /* Score bar */
+    .score-bar-wrap {
+      height: 3px;
+      background: var(--border);
+      border-radius: 999px;
+      margin-top: 4px;
+      overflow: hidden;
+    }
+    .score-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.5s ease;
+    }
+    .score-bar-fill.high { background: var(--green); }
+    .score-bar-fill.mid { background: #f59e0b; }
+    .score-bar-fill.low { background: var(--red); }
+
+    /* ── OVERLAY & LOADER ── */
+    .overlay {
+      position: fixed; inset: 0;
+      display: none; align-items: center; justify-content: center;
+      background: rgba(245,244,240,0.75);
+      backdrop-filter: blur(6px);
+      z-index: 999;
+    }
+    .overlay.show { display: flex; }
+    .loader-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      padding: 28px 32px;
+      width: 360px;
+      max-width: calc(100vw - 40px);
+      text-align: center;
+    }
+    .loader-spinner {
+      width: 40px; height: 40px;
+      border: 3px solid var(--border);
+      border-top-color: var(--text);
+      border-radius: 50%;
+      margin: 0 auto 16px;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loader-box h3 { font-family: 'Syne', sans-serif; font-size: 15px; margin-bottom: 4px; }
+    .loader-box p { font-size: 12px; color: var(--muted); }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 20px; right: 20px;
+      min-width: 260px; max-width: 360px;
+      background: var(--text);
+      color: var(--bg);
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-lg);
+      padding: 12px 16px;
+      display: none;
+      z-index: 1000;
+    }
+    .toast.show { display: block; animation: slideUp 0.2s ease; }
+    @keyframes slideUp { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .toast-title { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+    .toast-msg { font-size: 12px; opacity: 0.7; }
+    .toast.toast-err { background: var(--red); }
+  </style>
+</head>
+<body>
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 20 20" fill="none">
+            <circle cx="7" cy="7" r="3.5" stroke="white" stroke-width="1.5"/>
+            <circle cx="13" cy="13" r="3.5" stroke="white" stroke-width="1.5"/>
+            <path d="M9.5 9.5 L10.5 10.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-name">TalentMatch AI</div>
+          <div class="brand-tag">JD → Employee Skill Matching</div>
+        </div>
+      </div>
+      <div class="status-pill">
+        <span class="status-dot"></span>
+        System Ready
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE -->
+  <div class="page">
+    <div class="page-header">
+      <h1 class="page-title">Find the best-fit employees for any role</h1>
+      <p class="page-sub">Paste or load a Job Description — the system scores and ranks employees instantly.</p>
+    </div>
+
+    <div class="main-grid">
+
+      <!-- LEFT: JD Input -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Job Description</span>
+          <span class="char-counter" id="counter" style="margin:0">0 chars</span>
+        </div>
+        <div class="card-body">
+
+          <!-- Sample JDs -->
+          <div class="sample-bar">
+            <span class="sample-label">Samples:</span>
+            <button class="sample-btn" onclick="loadSample('pm')">Project Manager</button>
+            <button class="sample-btn" onclick="loadSample('fe')">Frontend Dev</button>
+            <button class="sample-btn" onclick="loadSample('devops')">DevOps Engineer</button>
+            <button class="sample-btn" onclick="loadSample('ds')">Data Scientist</button>
+          </div>
+
+          <textarea class="jd-textarea" id="jd" placeholder="Paste the full Job Description here, or click a sample above to load one..."></textarea>
+          <div class="char-counter" id="charCount">0 characters</div>
+
+          <div class="action-row">
+            <button class="btn btn-primary" onclick="runMatching()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+              Find Matches
+            </button>
+            <button class="btn btn-excel" onclick="generateExcel()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export Excel
+            </button>
+            <button class="btn btn-clear" onclick="clearAll()">Clear</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Results -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Top 10 Matches</span>
+          <span id="results-badge" style="font-size:11px;color:var(--muted);">No results yet</span>
+        </div>
+        <div class="card-body" id="results-body">
+          <div class="results-placeholder">
+            <div class="ph-icon">🎯</div>
+            <p>Enter a Job Description and click <strong>Find Matches</strong> to see the best-fit employees ranked by score.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- OVERLAY -->
+  <div class="overlay" id="overlay">
+    <div class="loader-box">
+      <div class="loader-spinner"></div>
+      <h3 id="loaderTitle">Processing...</h3>
+      <p id="loaderMsg">Evaluating employees against JD</p>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast">
+    <div class="toast-title" id="toastTitle"></div>
+    <div class="toast-msg" id="toastMsg"></div>
+  </div>
+
+<script>
+const jdEl = document.getElementById("jd");
+const overlay = document.getElementById("overlay");
+const toast = document.getElementById("toast");
+let toastTimer;
+
+// ── Utilities ──────────────────────────────────────────
+
+function showOverlay(on, title="Processing...", msg="Evaluating employees against JD") {
+  document.getElementById("loaderTitle").textContent = title;
+  document.getElementById("loaderMsg").textContent = msg;
+  overlay.classList.toggle("show", !!on);
+}
+
+function showToast(title, msg, isErr=false) {
+  clearTimeout(toastTimer);
+  document.getElementById("toastTitle").textContent = title;
+  document.getElementById("toastMsg").textContent = msg;
+  toast.className = "toast show" + (isErr ? " toast-err" : "");
+  toastTimer = setTimeout(() => toast.classList.remove("show"), 3000);
+}
+
+jdEl.addEventListener("input", () => {
+  const n = jdEl.value.length;
+  document.getElementById("charCount").textContent = `${n.toLocaleString()} characters`;
+  document.getElementById("counter").textContent = `${n.toLocaleString()} chars`;
+});
+
+// ── Clear ──────────────────────────────────────────────
+function clearAll() {
+  jdEl.value = "";
+  document.getElementById("charCount").textContent = "0 characters";
+  document.getElementById("counter").textContent = "0 chars";
+  document.getElementById("results-body").innerHTML = `
+    <div class="results-placeholder">
+      <div class="ph-icon">🎯</div>
+      <p>Enter a Job Description and click <strong>Find Matches</strong> to see the best-fit employees ranked by score.</p>
+    </div>`;
+  document.getElementById("results-badge").textContent = "No results yet";
+  showToast("Cleared", "JD has been cleared.");
+}
+
+// ── Sample JDs ─────────────────────────────────────────
+const SAMPLES = {
+  pm: `Job Title: Senior Project Manager
+
+We are seeking an experienced Senior Project Manager to lead complex IT and software delivery projects.
+
+Requirements:
+- 10–15 years of project management experience
+- PMP certification required; PMI-ACP preferred
+- Strong expertise in Agile, Scrum, and Waterfall methodologies
+- Experience with JIRA, Confluence, MS Project
+- Excellent stakeholder communication and risk management skills
+- Preferred location: Bangalore, Mumbai, or Hyderabad
+- Ready to travel and relocate as needed`,
+
+  fe: `Job Title: Senior Frontend Developer
+
+We are looking for a skilled Frontend Developer to build high-quality web applications.
+
+Requirements:
+- 3–6 years of frontend development experience
+- Strong proficiency in React.js, TypeScript, and JavaScript
+- Experience with HTML5, CSS3, Tailwind CSS
+- Familiarity with REST APIs and GraphQL
+- Knowledge of testing frameworks (Jest, Cypress)
+- Experience with CI/CD pipelines is a plus
+- Preferred location: Chennai, Pune, or Remote`,
+
+  devops: `Job Title: DevOps Engineer
+
+Looking for a DevOps Engineer to manage infrastructure, CI/CD, and cloud platforms.
+
+Requirements:
+- 4–8 years of DevOps/Infrastructure experience
+- Expertise in AWS, Azure, or GCP
+- Strong knowledge of Docker, Kubernetes
+- Experience with Terraform, Ansible
+- Proficiency in Jenkins, GitHub Actions, or GitLab CI
+- Scripting skills: Python, Bash
+- AWS Solutions Architect or DevOps Engineer certification preferred`,
+
+  ds: `Job Title: Data Scientist
+
+Seeking a Data Scientist to build ML models and derive insights from large datasets.
+
+Requirements:
+- 3–7 years of data science experience
+- Proficiency in Python, R, and SQL
+- Experience with ML frameworks: TensorFlow, PyTorch, scikit-learn
+- Strong knowledge of statistics, probability, and data modeling
+- Experience with NLP or computer vision is a plus
+- Familiarity with cloud data platforms (AWS SageMaker, Azure ML)
+- Publications or Kaggle rankings are a bonus`
+};
+
+function loadSample(type) {
+  jdEl.value = SAMPLES[type] || "";
+  const n = jdEl.value.length;
+  document.getElementById("charCount").textContent = `${n.toLocaleString()} characters`;
+  document.getElementById("counter").textContent = `${n.toLocaleString()} chars`;
+  showToast("Sample Loaded", `${type.toUpperCase()} JD is ready.`);
+}
+
+// ── Score helpers ──────────────────────────────────────
+function scoreClass(s) {
+  if (s >= 75) return "high";
+  if (s >= 50) return "mid";
+  return "low";
+}
+function bandBadgeClass(band) {
+  const b = (band || "").toLowerCase();
+  if (b.includes("strong") || b.includes("excellent")) return "badge-green";
+  if (b.includes("good") || b.includes("moderate")) return "badge-yellow";
+  return "badge-red";
+}
+
+// ── Find Matches ───────────────────────────────────────
+async function runMatching() {
+  const jdText = jdEl.value.trim();
+  if (!jdText) { showToast("Missing JD", "Please enter a Job Description first.", true); return; }
+
+  showOverlay(true, "Finding Matches", "Scoring all employees against the JD...");
+  try {
+    const res = await fetch("/api/get_matches", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ jd_text: jdText })
+    });
+    const data = await res.json();
+
+    if (!res.ok || data.error) throw new Error(data.error || "Server error");
+    if (!data.length) {
+      document.getElementById("results-body").innerHTML = `<div class="results-placeholder"><div class="ph-icon">😕</div><p>No matching employees found for this JD.</p></div>`;
+      document.getElementById("results-badge").textContent = "0 results";
+      return;
+    }
+
+    renderResults(data);
+    showToast("Matches Found", `Top ${data.length} employees ranked successfully.`);
+  } catch (e) {
+    showToast("Error", e.message, true);
+  } finally {
+    showOverlay(false);
+  }
+}
+
+function renderResults(data) {
+  document.getElementById("results-badge").textContent = `${data.length} candidates ranked`;
+
+  let html = `<div class="emp-list">`;
+  data.forEach((emp, i) => {
+    const score = Math.round(emp.final_match_score || 0);
+    const sc = scoreClass(score);
+    const rank = i + 1;
+    const bandClass = bandBadgeClass(emp.final_match_band);
+    const skillPct = Math.round(emp.skill_match_percent || 0);
+    const expYrs = emp.experience_years || 0;
+    const loc = emp.current_location || "—";
+    const missing = emp.missing_skills_count || 0;
+
+    html += `
+    <div class="emp-card">
+      <div class="emp-rank ${rank <= 3 ? 'top3' : ''}">#${rank}</div>
+      <div class="emp-info">
+        <div class="emp-name">${emp.name || "—"}</div>
+        <div class="emp-meta">${emp.role || "—"} · ${expYrs} yrs · ${loc}</div>
+        <div class="emp-badges">
+          <span class="badge ${bandClass}">${emp.final_match_band || "—"}</span>
+          <span class="badge badge-green">Skills ${skillPct}%</span>
+          ${missing > 0 ? `<span class="badge badge-red">${missing} gap${missing>1?'s':''}</span>` : ''}
+        </div>
+        <div class="score-bar-wrap" style="margin-top:8px">
+          <div class="score-bar-fill ${sc}" style="width:${score}%"></div>
+        </div>
+      </div>
+      <div class="emp-score">
+        <div class="score-value ${sc}">${score}</div>
+        <div class="score-label">/ 100</div>
+      </div>
+    </div>`;
+  });
+  html += `</div>`;
+  document.getElementById("results-body").innerHTML = html;
+}
+
+// ── Generate Excel ─────────────────────────────────────
+async function generateExcel() {
+  const jdText = jdEl.value.trim();
+  if (!jdText) { showToast("Missing JD", "Please enter a Job Description first.", true); return; }
+
+  showOverlay(true, "Generating Excel", "Scoring all employees and building report...");
+  try {
+    const res = await fetch("/api/generate_excel", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ jd_text: jdText })
+    });
+    if (!res.ok) { const d = await res.json(); throw new Error(d.error || "Server error"); }
+
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+    const now = new Date();
+    const name = `jd_match_report_${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}.xlsx`;
+    const a = document.createElement("a");
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    window.URL.revokeObjectURL(url);
+    showToast("Excel Downloaded", "Full employee report saved to your device.");
+  } catch(e) {
+    showToast("Error", e.message, true);
+  } finally {
+    showOverlay(false);
+  }
+}
+</script>
+</body>
+</html>
