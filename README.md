@@ -1,8 +1,10 @@
+TASK 3 – SERVICE ORIENTED ARCHITECTURE
 # SmartHire-AI-SOA
 ### Job Recommendation as a Service Using Service-Oriented Architecture
 <p align="center">
   <b>One Intelligent Matching Service. Multiple Recruitment Platforms. Smarter Job Recommendations.</b>
 </p>
+
 
 ## 1. Project Overview
 
