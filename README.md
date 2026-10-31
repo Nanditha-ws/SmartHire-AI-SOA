@@ -3,7 +3,8 @@
 <p align="center">
   <b>One Intelligent Matching Service. Multiple Recruitment Platforms. Smarter Job Recommendations.</b>
 </p>
-1. Project Overview
+
+## 2. Project Overview
 
 SmartHire-AI-SOA is a proposed AI-powered job recommendation service designed using **Service-Oriented Architecture (SOA)**.
 
