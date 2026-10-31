@@ -1,4 +1,7 @@
 TASK 3 – SERVICE ORIENTED ARCHITECTURE
+TANIKASRI S (RA2311003050073)
+NANDITHA M S (RA2311003050101)
+SHIBANI B (RA2311003050097)
 # SmartHire-AI-SOA
 ### Job Recommendation as a Service Using Service-Oriented Architecture
 <p align="center">
